@@ -5,21 +5,12 @@ defmodule Auth0Ex.Utils do
   alias Auth0Ex.TokenState
 
   def base_url do
-    auth0_domain = domain()
-
-    base_domain =
-      if String.ends_with?(auth0_domain, "auth0.com") or custom_domain() do
-        auth0_domain
-      else
-        IO.warn(
-          "setting domain without full base domain is deprecated and will be removed in future versions\n" <>
-            "domain config should be : <your_tenant>[.optional_region].auth0.com, not just <your_tenant>"
-        )
-
-        "#{auth0_domain}.auth0.com"
-      end
-
-    "https://#{base_domain}/"
+    %URI{
+      port: get_config(:port),
+      host: domain(),
+      scheme: get_config(:uri_scheme)
+    }
+    |> URI.to_string()
   end
 
   def base_url(:mgmt), do: "#{base_url()}api/v2/"
