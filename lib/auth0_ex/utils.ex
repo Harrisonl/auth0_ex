@@ -11,6 +11,7 @@ defmodule Auth0Ex.Utils do
       scheme: get_config(:uri_scheme)
     }
     |> URI.to_string()
+    |> Kernel.<>("/")
   end
 
   def base_url(:mgmt), do: "#{base_url()}api/v2/"
